@@ -1,10 +1,10 @@
-# AppAgenda - Taller 1
+# AppAgenda (Agenda de Contactos) - Taller 1
 
 **Asignatura:** Desarrollo de Aplicaciones en la Nube
 
 ## Descripcion
 
-Este repositorio contiene el codigo fuente de AppAgenda, desarrollado como parte del Taller 1 de la asignatura. El proyecto ha sido construido estructurando todo el ciclo de vida del software bajo la metodologia SDD (Specification-Driven Development).
+Este repositorio contiene el codigo fuente de AppAgenda (una Agenda de Contactos), desarrollado como parte del Taller 1 de la asignatura. El proyecto ha sido construido estructurando todo el ciclo de vida del software bajo la metodologia SDD (Specification-Driven Development).
 
 ## Metodologia: Specification-Driven Development (SDD)
 
