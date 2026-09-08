@@ -1,0 +1,15 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Java 17+, Spring Boot 3, Spring Data JPA, PostgreSQL, Angular 19, Tailwind CSS v3.
+  Arquitectura: Code-First explícito. No se usan generadores de OpenAPI ni Contract-First.
+  Convenciones Frontend: Uso de Signals y Standalone Components en Angular. Formularios estrictos.
+  Convenciones UI/UX: Prohibido usar window.confirm(), siempre usar modales con backdrop-blur. Tema visual: hoja rayada de cuaderno.
+  Regla General: Mantener el Backend y Frontend completamente desacoplados.
+
+rules:
+  design:
+    - Explicar siempre cómo se comunican las interfaces de Angular con el controlador de Spring Boot.
+  tasks:
+    - Separar siempre las tareas del Backend de las del Frontend.
+    - Cada tarea debe tener su propio método de validación o testing asociado.

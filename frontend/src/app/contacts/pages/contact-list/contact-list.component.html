@@ -1,0 +1,127 @@
+<div class="max-w-6xl mx-auto mt-8 p-8 bg-white rounded-2xl shadow-xl border border-gray-100">
+  <div class="flex items-center justify-between mb-8 border-b pb-4">
+    <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">Mi Agenda</h2>
+    <a routerLink="/contacts/new" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+      + Nuevo Contacto
+    </a>
+  </div>
+
+  <!-- Búsqueda y Filtros -->
+  <div class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-100">
+    <!-- Search Bar -->
+    <div class="relative w-full md:w-1/2">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <input type="text" 
+             [ngModel]="searchTerm()" 
+             (ngModelChange)="searchTerm.set($event); onFilterChange()"
+             placeholder="Buscar por nombre, apellido o correo..." 
+             class="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm transition-all bg-white shadow-sm font-medium">
+    </div>
+    
+    <!-- Filtros Select y Checkbox -->
+    <div class="flex items-center gap-4 w-full md:w-auto">
+      <div class="relative">
+        <select [ngModel]="selectedCategory()" 
+                (ngModelChange)="selectedCategory.set($event); onFilterChange()"
+                class="appearance-none py-3 pl-4 pr-10 border border-gray-200 rounded-xl text-sm font-bold bg-white text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
+          <option value="">Todas las categorías</option>
+          <option value="Trabajo">Trabajo</option>
+          <option value="Familia">Familia</option>
+          <option value="Amigos">Amigos</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </div>
+      </div>
+
+      <label class="flex items-center cursor-pointer text-sm text-yellow-700 font-bold bg-yellow-50 hover:bg-yellow-100 px-4 py-3 rounded-xl border border-yellow-200 transition-colors shadow-sm">
+        <input type="checkbox" 
+               [ngModel]="showFavoritesOnly()" 
+               (ngModelChange)="showFavoritesOnly.set($event); onFilterChange()"
+               class="mr-2 w-4 h-4 text-yellow-500 focus:ring-yellow-400 rounded border-yellow-300">
+        Favoritos
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage()" class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-800 rounded-r-lg shadow-sm">
+    <p class="font-medium">{{ errorMessage() }}</p>
+  </div>
+
+  <div *ngIf="isLoading()" class="flex justify-center py-16">
+    <svg class="animate-spin h-10 w-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  </div>
+
+  <div *ngIf="!isLoading() && contacts().length === 0" class="text-center py-16 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+    <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+    </svg>
+    <h3 class="text-lg font-medium text-gray-900">No hay contactos</h3>
+    <p class="mt-1 text-sm text-gray-500">Comienza agregando tu primer contacto a la agenda.</p>
+  </div>
+
+  <div *ngIf="!isLoading() && contacts().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let contact of contacts()" class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-xl transition-all duration-300 relative group cursor-pointer hover:border-blue-300">
+      
+      <!-- Favorito Badge -->
+      <div *ngIf="contact.favorito" class="absolute top-4 right-4 text-yellow-400 drop-shadow-sm">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+      </div>
+
+      <div class="flex items-center mb-5">
+        <div class="h-14 w-14 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 flex items-center justify-center text-blue-700 font-black text-xl border border-blue-200 shadow-inner">
+          {{ contact.nombre.charAt(0) | uppercase }}{{ contact.apellido.charAt(0) | uppercase }}
+        </div>
+        <div class="ml-4 w-3/4">
+          <h3 class="text-xl font-bold text-gray-900 truncate">{{ contact.nombre }} {{ contact.apellido }}</h3>
+          <span *ngIf="contact.categoria" class="inline-flex items-center mt-2 px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full shadow-sm">
+            <svg *ngIf="contact.categoria === 'Trabajo'" class="w-3.5 h-3.5 mr-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            <svg *ngIf="contact.categoria === 'Familia'" class="w-3.5 h-3.5 mr-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <svg *ngIf="contact.categoria === 'Amigos'" class="w-3.5 h-3.5 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            {{ contact.categoria }}
+          </span>
+        </div>
+      </div>
+      
+      <div class="space-y-3 text-sm text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-100">
+        <p class="flex items-center font-medium"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> <span class="truncate">{{ contact.correo }}</span></p>
+        <p *ngIf="contact.telefono" class="flex items-center font-medium"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg> {{ contact.telefono }}</p>
+        <p *ngIf="contact.empresa" class="flex items-center font-medium"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg> {{ contact.empresa }}</p>
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <a [routerLink]="['/contacts/edit', contact.id]" class="text-sm font-bold text-blue-600 hover:text-blue-800 flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Editar
+        </a>
+        <button (click)="openDeleteModal(contact.id)" class="text-sm font-bold text-red-500 hover:text-red-700 flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg> Eliminar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div *ngIf="contactToDelete() !== null" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm transform transition-all scale-100 opacity-100">
+    <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+      <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+    </div>
+    <h3 class="text-xl font-bold text-center text-gray-900 mb-2">¿Eliminar contacto?</h3>
+    <p class="text-center text-sm text-gray-500 mb-6">Esta acción no se puede deshacer. El contacto desaparecerá de tu agenda permanentemente.</p>
+    <div class="flex space-x-3">
+      <button (click)="closeDeleteModal()" class="w-1/2 px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-700 font-bold hover:bg-gray-50 transition-colors focus:outline-none">
+        Cancelar
+      </button>
+      <button (click)="confirmDelete()" class="w-1/2 px-4 py-3 bg-red-600 rounded-xl text-white font-bold hover:bg-red-700 transition-colors focus:outline-none shadow-md hover:shadow-lg hover:-translate-y-0.5 transform">
+        Eliminar
+      </button>
+    </div>
+  </div>
+</div>

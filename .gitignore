@@ -1,0 +1,40 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependencias Node.js
+node_modules/
+
+# Entornos y variables
+.env
+
+# Compilados de Frontend (Angular)
+dist/
+build/
+.angular/
+tmp/
+out-tsc/
+
+# Compilados de Backend (Java Maven)
+target/
+*.jar
+*.war
+*.class
+
+# Editores e IDEs
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos del SO
+.DS_Store
+Thumbs.db
+
+# DOCS
+.agents/
+MANUAL/
