@@ -36,8 +36,8 @@ resource "aws_instance" "backend" {
               sudo apt-get update -y
               sudo apt-get install openjdk-17-jre-headless -y
               # 3. Descargar el backend compilado (Reemplazar URL) y ejecutar
-              # wget https://mi-bucket/backend.jar`n              `n              `n              
-              # java -jar backend.jar --spring.datasource.url=jdbc:postgresql://${aws_db_instance.postgres.endpoint}/postgres &
+              wget https://raw.githubusercontent.com/Jhostin283/Taller1-AppAgenda/main/backend/target/contacts-backend-0.0.1-SNAPSHOT.jar -O backend.jar`n              `n              `n              
+              java -jar backend.jar --spring.datasource.url=jdbc:postgresql://${aws_db_instance.postgres.endpoint}/postgres &
               EOF
   tags = { Name = "Taller1-Backend" }
 }
