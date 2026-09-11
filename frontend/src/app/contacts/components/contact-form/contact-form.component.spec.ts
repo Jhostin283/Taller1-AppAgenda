@@ -1,32 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ContactFormComponent } from './contact-form.component';
-import { ContactService } from '../../services/contact.service';
+import { DefaultService } from '../../../api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ContactFormComponent', () => {
   let component: ContactFormComponent;
   let fixture: ComponentFixture<ContactFormComponent>;
-  let router: Router;
 
   beforeEach(async () => {
-    const mockContactService = jasmine.createSpyObj('ContactService', ['createContact', 'updateContact']);
-    const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    const mockContactService = jasmine.createSpyObj('DefaultService', ['createContact', 'updateContact', 'getContactById']);
 
     await TestBed.configureTestingModule({
-      imports: [ContactFormComponent, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [ContactFormComponent, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
       providers: [
-        { provide: ContactService, useValue: mockContactService },
-        { provide: Router, useValue: mockRouter }
+        { provide: DefaultService, useValue: mockContactService }
       ]
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(ContactFormComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -37,9 +33,8 @@ describe('ContactFormComponent', () => {
   });
 
   it('TC_FR_02: Botón deshabilitado por error visual al borrar campo obligatorio', () => {
-    // Simulamos llenar y luego vaciar un campo
     component.contactForm.patchValue({ nombre: 'Juan' });
-    component.contactForm.patchValue({ nombre: '' }); // Vaciamos
+    component.contactForm.patchValue({ nombre: '' }); 
     fixture.detectChanges();
 
     const saveButton = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
@@ -47,7 +42,7 @@ describe('ContactFormComponent', () => {
   });
 
   it('TC_FR_03: Cancelación segura redirige a /contacts sin guardar', () => {
-    component.cancel();
-    expect(router.navigate).toHaveBeenCalledWith(['/contacts']);
+    const cancelLink = fixture.debugElement.query(By.css('a.btn.btn-outline.btn-error')).nativeElement;
+    expect(cancelLink.getAttribute('routerLink')).toBe('/contacts');
   });
 });
