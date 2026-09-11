@@ -53,7 +53,7 @@ resource "aws_security_group" "docker_sg" {
 # Crear la instancia EC2
 resource "aws_instance" "docker_host" {
   ami           = "ami-0c7217cdde317cfec" # Ubuntu 22.04 LTS (us-east-1)
-  instance_type = "t2.micro" # Capa gratuita
+  instance_type = "t3.micro" # Capa gratuita actualizada
   key_name      = aws_key_pair.tf_key.key_name
   vpc_security_group_ids = [aws_security_group.docker_sg.id]
 
