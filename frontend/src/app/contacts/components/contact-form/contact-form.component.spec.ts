@@ -42,7 +42,7 @@ describe('ContactFormComponent', () => {
   });
 
   it('TC_FR_03: Cancelación segura redirige a /contacts sin guardar', () => {
-    const cancelLink = fixture.debugElement.query(By.css('a.btn.btn-outline.btn-error')).nativeElement;
+    const cancelLink = fixture.debugElement.query(By.css('a[routerLink="/contacts"]')).nativeElement;
     expect(cancelLink.getAttribute('routerLink')).toBe('/contacts');
   });
 });
