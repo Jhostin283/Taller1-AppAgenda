@@ -68,7 +68,7 @@ describe('ContactFormComponent', () => {
     component.contactForm.patchValue({
       nombre: 'Juan', apellido: 'Perez', correo: 'juan@test.com'
     });
-    contactService.createContact.and.returnValue(of({}));
+    contactService.createContact.and.returnValue(of({} as any));
     
     component.onSubmit();
     
@@ -131,7 +131,7 @@ describe('ContactFormComponent - Edit Mode', () => {
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
 
-    contactService.getContactById.and.returnValue(of({ nombre: 'Juan Editado', apellido: 'Perez', correo: 'juan@test.com' }));
+    contactService.getContactById.and.returnValue(of({ nombre: 'Juan Editado', apellido: 'Perez', correo: 'juan@test.com' } as any));
     fixture.detectChanges(); // calls ngOnInit
   });
 
@@ -144,7 +144,7 @@ describe('ContactFormComponent - Edit Mode', () => {
 
   it('debe actualizar contacto exitosamente y redirigir', fakeAsync(() => {
     component.contactForm.patchValue({ nombre: 'Juan Editado', apellido: 'Perez', correo: 'juan@test.com' });
-    contactService.updateContact.and.returnValue(of({}));
+    contactService.updateContact.and.returnValue(of({} as any));
     
     component.onSubmit();
     

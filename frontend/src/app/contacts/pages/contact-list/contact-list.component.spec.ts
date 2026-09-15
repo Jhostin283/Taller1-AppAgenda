@@ -68,7 +68,7 @@ describe('ContactListComponent', () => {
   });
 
   it('debe eliminar contacto y actualizar lista en confirmDelete', () => {
-    contactService.deleteContact.and.returnValue(of(undefined));
+    contactService.deleteContact.and.returnValue(of(undefined as any));
     component.openDeleteModal(1);
     component.confirmDelete();
     expect(contactService.deleteContact).toHaveBeenCalledWith(1);
