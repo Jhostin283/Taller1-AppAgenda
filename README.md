@@ -1,4 +1,4 @@
-# AppAgenda (Agenda de Contactos) - Taller 1
+AppAgenda — Agenda de Contactos, Clima y Predicción de Visitantes
 
 **Asignatura:** Desarrollo de Aplicaciones en la Nube
 
