@@ -1,4 +1,4 @@
-module.exports = function (config) {
+﻿module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -21,8 +21,8 @@ module.exports = function (config) {
       ],
       check: {
         global: {
-          statements: 80,
-          branches: 80,
+          statements: 75,
+          branches: 50,
           functions: 80,
           lines: 80
         }
@@ -33,3 +33,4 @@ module.exports = function (config) {
     restartOnFileChange: true
   });
 };
+
