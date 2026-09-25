@@ -1,5 +1,7 @@
-## Purpose
+﻿## Purpose
 Gestión de contactos (CRUD) en el sistema.
+
+## Requirements
 
 ### Requirement: Crear Contacto
 El sistema SHALL permitir registrar nuevos contactos con validación estricta de formato y restricciones lógicas.

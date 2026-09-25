@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DefaultService, Contact } from '../../../api';
+import { CountrySelectorComponent } from '../../../weather/country-selector/country-selector.component';
+import { CityWeatherListComponent } from '../../../weather/city-weather-list/city-weather-list.component';
+import { VisitorPredictionComponent } from '../../../weather/visitor-prediction/visitor-prediction.component';
 
 @Component({
   selector: 'app-contact-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, CountrySelectorComponent, CityWeatherListComponent, VisitorPredictionComponent],
   templateUrl: './contact-list.component.html',
   styleUrls: ['./contact-list.component.scss']
 })
@@ -22,6 +25,12 @@ export class ContactListComponent implements OnInit {
   searchTerm = signal('');
   selectedCategory = signal('');
   showFavoritesOnly = signal(false);
+
+  selectedWeatherLocation = signal<any>(null);
+
+  onLocationSelected(location: any) {
+    this.selectedWeatherLocation.set(location);
+  }
 
   ngOnInit() {
     this.loadContacts();

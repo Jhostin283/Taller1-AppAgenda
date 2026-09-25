@@ -6,8 +6,10 @@
     </a>
   </div>
 
+  <app-visitor-prediction></app-visitor-prediction>
+
   <!-- Búsqueda y Filtros -->
-  <div class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-100">
+  <div class="mb-8 mt-8 flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-100">
     <!-- Search Bar -->
     <div class="relative w-full md:w-1/2">
       <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -44,6 +46,13 @@
         Favoritos
       </label>
     </div>
+  </div>
+
+  <!-- Weather Feature Integration -->
+  <div class="mb-8 p-6 bg-blue-50 rounded-xl border border-blue-100 shadow-sm">
+    <h3 class="text-xl font-bold text-blue-800 mb-4">Clima Regional</h3>
+    <app-country-selector (locationSelected)="onLocationSelected($event)"></app-country-selector>
+    <app-city-weather-list [selectedLocation]="selectedWeatherLocation()"></app-city-weather-list>
   </div>
 
   <div *ngIf="errorMessage()" class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-800 rounded-r-lg shadow-sm">

@@ -11,3 +11,11 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+weather:
+  api:
+    weatherapi:
+      key: "e8428866643c4fa1b4a192344262209"
+      url: "http://api.weatherapi.com/v1/current.json?key={key}&q={city}"
+    openweathermap:
+      key: "0450976a2036297def7f57040ab64c5a"
+      url: "http://api.openweathermap.org/data/2.5/weather?q={city}&appid={key}&units=metric"

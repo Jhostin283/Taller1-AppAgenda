@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContactListComponent } from './contact-list.component';
 import { DefaultService, Contact } from '../../../api';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('ContactListComponent', () => {
   let component: ContactListComponent;
@@ -19,9 +20,11 @@ describe('ContactListComponent', () => {
     mockService.getContacts.and.returnValue(of(mockContacts));
 
     await TestBed.configureTestingModule({
-      imports: [ContactListComponent, HttpClientTestingModule, RouterTestingModule],
+      imports: [ContactListComponent, RouterTestingModule],
       providers: [
-        { provide: DefaultService, useValue: mockService }
+        { provide: DefaultService, useValue: mockService },
+        provideHttpClient(),
+        provideHttpClientTesting()
       ]
     })
     .compileComponents();

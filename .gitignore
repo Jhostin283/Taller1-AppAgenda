@@ -38,3 +38,11 @@ Thumbs.db
 # DOCS
 .agents/
 MANUAL/
+
+# Terraform
+.terraform/
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars

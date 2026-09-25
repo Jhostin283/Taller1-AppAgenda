@@ -1,0 +1,102 @@
+<div class="relative w-full rounded-2xl shadow-xl overflow-hidden mb-10 border border-gray-200">
+  <!-- Header with Image Background -->
+  <div class="relative h-64 w-full">
+    <img src="assets/mirador.png" alt="Mirador San Francisco" class="absolute inset-0 w-full h-full object-cover">
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
+    
+    <!-- Title Area -->
+    <div class="absolute bottom-0 left-0 right-0 p-6 flex flex-col md:flex-row justify-between items-end">
+      <div>
+        <span class="px-3 py-1 bg-blue-600 text-white text-xs font-bold uppercase tracking-wider rounded-full mb-3 inline-block shadow-sm">
+          Afluencia Proyectada
+        </span>
+        <h3 class="text-3xl font-black text-white flex items-center gap-2 drop-shadow-md">
+          <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          {{ locationName }}
+        </h3>
+        <p class="text-gray-200 text-sm mt-1 font-medium ml-10">{{ city }}, {{ country }}</p>
+      </div>
+      
+      <div class="flex items-center gap-3 mt-4 md:mt-0">
+        <input type="date" [min]="getMinDate()" [max]="getMaxDate()" (change)="onDateSelected($event)" 
+               class="bg-white/20 backdrop-blur-md text-white border border-white/40 px-3 py-2 rounded-lg font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 [color-scheme:dark]">
+        
+        <button (click)="loadWeekPredictions()" [disabled]="loading()" class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white border border-white/40 px-4 py-2 rounded-lg font-semibold text-sm transition-all flex items-center gap-2">
+          <svg [class.animate-spin]="loading()" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          Actualizar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="bg-white p-12 flex flex-col items-center justify-center min-h-[250px]">
+    <div class="relative w-16 h-16">
+      <div class="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
+      <div class="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
+    </div>
+    <p class="mt-4 text-blue-800 font-medium">Analizando pronósticos para los próximos 7 días...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error() && !loading()" class="bg-red-50 p-8 text-center border-t border-red-100">
+    <svg class="w-12 h-12 text-red-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <p class="text-red-800 font-bold">{{ error() }}</p>
+  </div>
+
+  <!-- 7-Day Grid -->
+  <div *ngIf="!loading() && !error() && predictions().length > 0" class="bg-gray-50 p-6 overflow-x-auto">
+    <div class="flex gap-4 min-w-max pb-2">
+      <div *ngFor="let pred of predictions(); let first = first" 
+           class="bg-white border rounded-xl p-5 flex flex-col items-center w-44 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden"
+           [class.border-blue-400]="first"
+           [class.border-gray-200]="!first"
+           [class.ring-2]="first"
+           [class.ring-blue-100]="first">
+        
+        <!-- "Hoy" Badge -->
+        <div *ngIf="first" class="absolute top-0 w-full bg-blue-500 text-white text-[10px] font-black uppercase text-center py-0.5 tracking-widest">
+          Hoy
+        </div>
+
+        <p class="text-gray-500 font-bold text-sm uppercase tracking-wide mt-2">
+          {{ getDayName(pred.date) }}
+        </p>
+        <p class="text-xs text-gray-400 mb-4">{{ pred.date | date:'d MMM' }}</p>
+
+        <!-- Weather Icon -->
+        <div class="h-16 flex items-center justify-center">
+          <svg *ngIf="getWeatherIconType(pred.forecast.description) === 'sun'" class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          <svg *ngIf="getWeatherIconType(pred.forecast.description) === 'cloud'" class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+          <svg *ngIf="getWeatherIconType(pred.forecast.description) === 'rain'" class="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18v-2.25m6 2.25v-2.25m-6 2.25v-2.25m-6 2.25v-2.25m15-4.5a4.5 4.5 0 11-9 0 5.25 5.25 0 00-10.233 2.33A3 3 0 004.5 19.5h15a3 3 0 000-6z"></path></svg>
+          <svg *ngIf="getWeatherIconType(pred.forecast.description) === 'snow'" class="w-12 h-12 text-teal-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v20m-6-6l6 6 6-6M6 8l6-6 6 6"></path></svg>
+          <svg *ngIf="getWeatherIconType(pred.forecast.description) === 'thunder'" class="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+
+        <div class="text-center mt-2 mb-4">
+          <span class="text-xl font-black text-gray-800">{{ pred.forecast.temperature }}°C</span>
+          <p class="text-[10px] text-gray-400 capitalize truncate w-32" [title]="pred.forecast.description">{{ pred.forecast.description }}</p>
+        </div>
+
+        <div class="w-full h-px bg-gray-100 mb-4"></div>
+
+        <div class="text-center w-full">
+          <p class="text-[10px] uppercase text-gray-500 font-bold mb-1 tracking-wider">Afluencia Estimada</p>
+          <div class="flex items-center justify-center gap-1.5">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span class="text-2xl font-black text-blue-900">{{ pred.predictedVisitors }}</span>
+          </div>
+          <!-- Capacity indicator badge -->
+          <span class="inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-bold" [ngClass]="getCapacityStatus(pred.predictedVisitors).color">
+            {{ getCapacityStatus(pred.predictedVisitors).text }}
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
