@@ -63,6 +63,9 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          # Fix permissions and safe directory
+          git config --global --add safe.directory /home/ubuntu/Taller1-AppAgenda
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/Taller1-AppAgenda
           # Go to app directory
           cd /home/ubuntu/Taller1-AppAgenda
           # Pull latest changes
