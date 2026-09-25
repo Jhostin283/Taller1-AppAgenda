@@ -1,4 +1,4 @@
-﻿package com.example.contacts.service;
+package com.example.contacts.service;
 
 import com.example.contacts.dto.CityWeatherResponse;
 import com.example.contacts.dto.PredictionResponse;
