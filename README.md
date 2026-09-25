@@ -73,10 +73,29 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-## Video: Explicación de Despliegue en AWS (EC2)
+## Evidencias de Funcionamiento
+
+### CI/CD Pipeline (GitHub Actions)
+
+Pipeline completo con 3 jobs: **backend-coverage**, **frontend-coverage** y **deploy-to-ec2**. Todos los tests pasan exitosamente y el despliegue automático se ejecuta tras cada push a `main`.
+
+![CI/CD Pipeline](docs/images/evidencia-cicd-pipeline.png)
+
+### Predicción de Visitantes y Clima
+
+Módulo de predicción de afluencia turística para el **Mirador San Francisco** (Tingo María, Perú). Muestra pronóstico a 7 días con temperatura, condición climática, y estimación de visitantes basada en datos históricos y heurística meteorológica.
+
+![Predicción de Clima](docs/images/evidencia-prediccion-clima.png)
+
+### Instancia EC2 en AWS
+
+Instancia **t3.micro** ejecutándose en AWS con Docker Compose (backend + frontend + PostgreSQL). Despliegue automatizado vía Terraform.
+
+![EC2 AWS](docs/images/evidencia-ec2-aws.png)
+
+### Video: Explicación de Despliegue en AWS (EC2)
 
 A continuación se muestra la evidencia del despliegue en una instancia de Amazon EC2:
 
-<br>
-
-https://github.com/Jhostin283/Taller1-AppAgenda/raw/main/Videos/Grabacion.mp4
+<!-- Reemplaza TU_LINK_AQUI con el enlace de Google Drive o GitHub -->
+[Ver video de despliegue](https://github.com/Jhostin283/Taller1-AppAgenda/raw/main/Videos/Grabacion.mp4)
