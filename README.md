@@ -72,3 +72,11 @@ mvn clean install
 # Ejecutar el aplicativo (Spring Boot)
 mvn spring-boot:run
 ```
+
+## Video: Explicación de Despliegue en AWS (EC2)
+
+A continuación se muestra la evidencia del despliegue en una instancia de Amazon EC2:
+
+<video src="./Videos/Grabacion.mp4" controls width="100%">
+  Tu navegador no soporta la reproducción de video. Puedes <a href="./Videos/Grabacion.mp4">descargarlo aquí</a>.
+</video>
