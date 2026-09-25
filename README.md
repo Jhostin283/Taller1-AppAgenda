@@ -79,4 +79,4 @@ A continuación se muestra la evidencia del despliegue en una instancia de Amazo
 
 <br>
 
-👉 **[Clic aquí para ver el Video de Demostración](./Videos/Grabacion.mp4)**
+https://github.com/Jhostin283/Taller1-AppAgenda/raw/main/Videos/Grabacion.mp4
